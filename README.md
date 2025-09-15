@@ -8,4 +8,4 @@ School Email: 23102910@usc.edu.ph
 
 
 #2 ADVANCED MOBILE SCREENSHOT
-<img width="744" height="1000" alt="image" src="https://github.com/user-attachments/assets/4f4a1d28-0024-41a7-8641-61c60699d58d" />
+<img width="744" height="1500" alt="image" src="https://github.com/user-attachments/assets/4f4a1d28-0024-41a7-8641-61c60699d58d" />
