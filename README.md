@@ -22,4 +22,16 @@ School Email: 23102910@usc.edu.ph
 <img width="942" height="2048" alt="262219FB-3715-4B02-8752-45E46A3E0FE9" src="https://github.com/user-attachments/assets/d24f69e3-f34a-4c54-85ef-4a8f97d59809" />
 
 
+#5.2 CAMERA PROJECT
+<img width="1206" height="2622" alt="simulator_screenshot_4725FA13-75FA-4AC7-A7F5-4EA3C09C5E5E" src="https://github.com/user-attachments/assets/64d3844a-c067-4a96-a2bc-21748401aa59" />
+
+
+
+#6 REPOSITORY TO XCODE
+<img width="1206" height="2622" alt="simulator_screenshot_778AAB69-A3BE-4F80-AD57-045D4D20E715" src="https://github.com/user-attachments/assets/da503dba-f2ca-4cbd-acd1-7c6dfb4819fa" />
+
+
+
+
+
 
