@@ -1,5 +1,4 @@
-// Settings.tsx
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react'
 import {
   View,
   StyleSheet,
@@ -8,38 +7,57 @@ import {
   SectionList,
   Switch,
   TouchableOpacity,
-} from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import HeaderBar from './HeadBar'; // ensure correct filename/export
+} from 'react-native'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import HeaderBar from './HeadBar'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from './store'
+import { toggleTheme, setAccentColor } from './store/themeSlice'
 
 type Row =
   | {
-      key: string;
-      type: 'switch';
-      title: string;
-      subtitle?: string;
-      icon?: keyof typeof Ionicons.glyphMap;
-      value: boolean;
+      key: string
+      type: 'switch'
+      title: string
+      subtitle?: string
+      icon?: keyof typeof Ionicons.glyphMap
+      value?: boolean
     }
   | {
-      key: string;
-      type: 'link';
-      title: string;
-      subtitle?: string;
-      icon?: keyof typeof Ionicons.glyphMap;
-      navigateTo?: string;
-    };
+      key: string
+      type: 'link'
+      title: string
+      subtitle?: string
+      icon?: keyof typeof Ionicons.glyphMap
+      navigateTo?: string
+    }
 
 type Section = {
-  title: string;
-  data: Row[];
-};
+  title: string
+  data: Row[]
+}
 
 export default function Settings() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [downloadOnCellular, setDownloadOnCellular] = useState(false);
-  const [explicitContent, setExplicitContent] = useState(true);
-  const [notifications, setNotifications] = useState(true);
+  const dispatch = useDispatch()
+
+  // Redux state
+  const mode = useSelector((state: RootState) => state.theme.mode)
+  const accent = useSelector((state: RootState) => state.theme.accentColor)
+
+  // dynamic theme colors
+  const colors = {
+    background: mode === 'dark' ? 'rgb(16,16,16)' : 'white',
+    card: mode === 'dark' ? 'rgb(32,32,32)' : '#f0f0f0',
+    text: mode === 'dark' ? 'white' : 'black',
+    subtitle: mode === 'dark' ? '#9aa0a6' : '#555',
+  }
+
+  // local states
+  const [downloadOnCellular, setDownloadOnCellular] = React.useState(false)
+  const [explicitContent, setExplicitContent] = React.useState(true)
+  const [notifications, setNotifications] = React.useState(true)
+
+  const darkMode = mode === 'dark'
 
   const sections: Section[] = useMemo(
     () => [
@@ -80,6 +98,27 @@ export default function Settings() {
             icon: 'moon',
             value: darkMode,
           },
+          {
+            key: 'green',
+            type: 'link',
+            title: 'Green Accent',
+            subtitle: 'Spotify style',
+            icon: 'color-palette',
+          },
+          {
+            key: 'blue',
+            type: 'link',
+            title: 'Blue Accent',
+            subtitle: 'Cool look',
+            icon: 'color-palette',
+          },
+          {
+            key: 'red',
+            type: 'link',
+            title: 'Red Accent',
+            subtitle: 'Bold look',
+            icon: 'color-palette',
+          },
         ],
       },
       {
@@ -118,59 +157,63 @@ export default function Settings() {
       },
     ],
     [darkMode, downloadOnCellular, explicitContent, notifications]
-  );
+  )
 
-  const renderSectionHeader = useCallback(({ section }: { section: Section }) => {
-    return <Text style={styles.sectionTitle}>{section.title}</Text>;
-  }, []);
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: Section }) => {
+      return <Text style={[styles.sectionTitle, { color: colors.subtitle }]}>{section.title}</Text>
+    },
+    [colors.subtitle]
+  )
 
   const renderItem = useCallback(
     ({ item, index, section }: { item: Row; index: number; section: Section }) => {
-      const isFirst = index === 0;
-      const isLast = index === section.data.length - 1;
+      const isFirst = index === 0
+      const isLast = index === section.data.length - 1
 
       const containerStyle = [
         styles.row,
         isFirst && styles.rowFirst,
         isLast && styles.rowLast,
-      ];
+        { backgroundColor: colors.card },
+      ]
 
       if (item.type === 'switch') {
         const onToggle = () => {
-          if (item.key === 'dark') setDarkMode((v) => !v);
-          if (item.key === 'cellular') setDownloadOnCellular((v) => !v);
-          if (item.key === 'explicit') setExplicitContent((v) => !v);
-          if (item.key === 'push') setNotifications((v) => !v);
-        };
-
-        const value =
-          item.key === 'dark'
-            ? darkMode
-            : item.key === 'cellular'
-            ? downloadOnCellular
-            : item.key === 'explicit'
-            ? explicitContent
-            : notifications;
+          if (item.key === 'dark') dispatch(toggleTheme())
+          if (item.key === 'cellular') setDownloadOnCellular((v) => !v)
+          if (item.key === 'explicit') setExplicitContent((v) => !v)
+          if (item.key === 'push') setNotifications((v) => !v)
+        }
 
         return (
-          <View style={containerStyle} accessible accessibilityRole="switch" accessibilityLabel={item.title}>
+          <View style={containerStyle}>
             <View style={styles.left}>
               {item.icon && (
-                <Ionicons name={item.icon} size={20} color="#9aa0a6" style={styles.leftIcon} />
+                <Ionicons
+                  name={item.icon}
+                  size={20}
+                  color={colors.subtitle}
+                  style={styles.leftIcon}
+                />
               )}
               <View style={{ flex: 1 }}>
-                <Text style={styles.rowTitle}>{item.title}</Text>
-                {item.subtitle ? <Text style={styles.rowSubtitle}>{item.subtitle}</Text> : null}
+                <Text style={[styles.rowTitle, { color: colors.text }]}>{item.title}</Text>
+                {item.subtitle ? (
+                  <Text style={[styles.rowSubtitle, { color: colors.subtitle }]}>
+                    {item.subtitle}
+                  </Text>
+                ) : null}
               </View>
             </View>
             <Switch
-              value={value}
+              value={item.value ?? false}
               onValueChange={onToggle}
-              thumbColor={value ? '#fff' : '#f4f3f4'}
-              trackColor={{ false: '#767577', true: 'rgb(63, 194, 78)' }}
+              thumbColor={item.value ? '#fff' : '#f4f3f4'}
+              trackColor={{ false: '#767577', true: accent }}
             />
           </View>
-        );
+        )
       }
 
       // link row
@@ -178,36 +221,42 @@ export default function Settings() {
         <TouchableOpacity
           style={containerStyle}
           activeOpacity={0.7}
-          accessible
-          accessibilityRole="button"
-          accessibilityLabel={item.title}
           onPress={() => {
-            // navigation.navigate(item.navigateTo!) if wired with useNavigation
+            if (item.key === 'green') dispatch(setAccentColor('#3fc24e'))
+            if (item.key === 'blue') dispatch(setAccentColor('#4287f5'))
+            if (item.key === 'red') dispatch(setAccentColor('#f54242'))
           }}
         >
           <View style={styles.left}>
             {item.icon && (
-              <Ionicons name={item.icon} size={20} color="#9aa0a6" style={styles.leftIcon} />
+              <Ionicons
+                name={item.icon}
+                size={20}
+                color={colors.subtitle}
+                style={styles.leftIcon}
+              />
             )}
             <View style={{ flex: 1 }}>
-              <Text style={styles.rowTitle}>{item.title}</Text>
-              {item.subtitle ? <Text style={styles.rowSubtitle}>{item.subtitle}</Text> : null}
+              <Text style={[styles.rowTitle, { color: colors.text }]}>{item.title}</Text>
+              {item.subtitle ? (
+                <Text style={[styles.rowSubtitle, { color: colors.subtitle }]}>
+                  {item.subtitle}
+                </Text>
+              ) : null}
             </View>
           </View>
-          <Ionicons name="chevron-forward" size={18} color="#9aa0a6" />
+          <Ionicons name="chevron-forward" size={18} color={colors.subtitle} />
         </TouchableOpacity>
-      );
+      )
     },
-    [darkMode, downloadOnCellular, explicitContent, notifications]
-  );
+    [dispatch, darkMode, downloadOnCellular, explicitContent, notifications, colors, accent]
+  )
 
-  const ItemSeparator = () => <View style={styles.separator} />;
+  const ItemSeparator = () => <View style={styles.separator} />
 
   return (
-    <SafeAreaView style={styles.safe}>
-      {/* Render header ONCE here, not inside renderItem */}
+    <SafeAreaView style={[styles.safe, { backgroundColor: colors.background }]}>
       <HeaderBar />
-
       <SectionList
         sections={sections}
         keyExtractor={(row) => row.key}
@@ -219,21 +268,17 @@ export default function Settings() {
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: 'rgb(16, 16, 16)',
-  },
+  safe: { flex: 1 },
   content: {
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 32,
   },
   sectionTitle: {
-    color: '#9aa0a6',
     fontSize: 13,
     marginTop: 18,
     marginBottom: 8,
@@ -241,7 +286,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
   },
   row: {
-    backgroundColor: 'rgb(32, 32, 32)',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -250,26 +294,14 @@ const styles = StyleSheet.create({
   },
   rowFirst: { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
   rowLast: { borderTopLeftRadius: 0, borderTopRightRadius: 0 },
-  separator: {
-    height: 10,
-  },
+  separator: { height: 10 },
   left: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     marginRight: 12,
   },
-  leftIcon: {
-    marginRight: 10,
-  },
-  rowTitle: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  rowSubtitle: {
-    color: '#9aa0a6',
-    fontSize: 12,
-    marginTop: 2,
-  },
-});
+  leftIcon: { marginRight: 10 },
+  rowTitle: { fontSize: 15, fontWeight: '600' },
+  rowSubtitle: { fontSize: 12, marginTop: 2 },
+})
