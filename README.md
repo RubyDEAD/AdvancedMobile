@@ -34,8 +34,8 @@ School Email: 23102910@usc.edu.ph
 
 
 #7 API Integration with PokeAPI
-<img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/a559ea46-c236-46e7-85fd-b34acf86a0c1" />
 
+![28c7390a-8c81-4a72-8b9e-fc38b9c66e7a](https://github.com/user-attachments/assets/66b0dc93-d182-4466-8617-a87fcc27eb43)
 
-
+![bfd629f9-dd51-450e-8ede-841374a37378](https://github.com/user-attachments/assets/8322c034-fc28-4c8b-8cf1-9d02c3628c34)
 
