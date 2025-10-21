@@ -12,6 +12,7 @@ import Playlist from './Playlist'
 import Settings from './Settings'
 import AnimatedBackground from './components/AnimatedBackground'
 import CameraActivity from './CameraActivity'
+import PokemonList from './PokemonList'
 const Stack = createStackNavigator()
 
 export default function App() {
@@ -29,6 +30,6 @@ export default function App() {
     //     </NavigationContainer>
     //   </AnimatedBackground>
     // </Provider>
-    <CameraActivity />
+    <PokemonList />
   )
 }
